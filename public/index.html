@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YT-VD-Downloader</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <form action="">
+    <div class="container">
+      <h1>YouTube Downloader</h1>
+      <div class="input-group">
+        <label for="videoUrl">YouTube Video URL:</label>
+        <input type="text" id="videoUrl" placeholder="Enter YouTube URL">
+      </div>
+      
+      <div class="input-group-2">
+          <label for="media-type">Select Media Type:</label>
+          <div id="media-type">
+              <input type="radio" id="video-input" name="mediaType" value="video" checked>
+              <label for="video-input">Video</label>
+              <br>
+              <input type="radio" id="audio-input" name="mediaType" value="audio">
+              <label for="audio-input">Audio</label>
+              <div class="input-group">
+                  <label for="pixels">Select Quality:</label>
+                  <select id="pixels"> 
+                    <option value="360">360p</option>
+                    <option value="480">480p</option>
+                    <option value="720">720p</option>
+                    <option value="1080">1080p</option>
+                  </select>
+                </div>
+          </div>
+      </div>
+     
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+  <div class="media-container">
+    <video id="video"></video>
+    <audio id="audio"></audio>
+    <a href="" id="download-btn" class="hidden">Download</a>
+    <div class="media-details">
+      <p id="media-title"></p>
+      <p id="media-desc"></p>
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
