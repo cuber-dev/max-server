@@ -1,58 +1,63 @@
-
+:root{
+  --t-60 : white;
+  --t-30 : rgb(61, 60, 60);
+  --t-10 : rgb(221, 151, 22);
+}
   body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
   }
   *{
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
   h1 {
     text-align: center;
-    margin-bottom: 20px;
-  }
-  
- 
-  
-  .hidden{
-    display: none;
   }
 
-
-  
   .chat-container {
     max-width: 600px;
     margin: 2rem auto;
-    padding: 20px;
-    border: 1px solid #ccc;
+    margin-bottom: 0;
+    border: 1px solid var(--t-30);
     border-radius: 5px;
   }
-  
+  .chat-container h1{
+    padding: .5rem;
+    background-color: var(--t-30);
+    color: var(--t-60);
+  }
   .chat-display {
     height: 500px;
     overflow-y: scroll;
-    border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 10px;
+    padding: 0 1rem;
   }
   
   .chat-bubble {
-    margin: 5px 0;
+    margin: .5rem 0;
   }
-  .chat-bubble p{ 
-    border-radius: 10px;
+  .chat-bubble p{
+    border-radius: .3rem;
     padding: 5px 10px;
     max-width: 80%;
     white-space: wrap;
     word-wrap: break-word;
     line-height: 1.5rem;
-  }
+    -webkit-border-radius: .3rem;
+    -moz-border-radius: .3rem;
+    -ms-border-radius: .3rem;
+    -o-border-radius: .3rem;
+}
   
   .chat-bubble.bot p{
     background-color: #f0efef;
   }
   .chat-bubble.user p{
-    background-color: #000000;
+    background-color: var(--t-30);
     color: white;
   }
   .chat-bubble.user {
@@ -64,13 +69,15 @@
     display: flex;
     margin-top: 10px;
     margin-left: auto;
-    
+    background-color: var(--t-30);
+    padding: 1rem .5rem;
 }
   
   .chat-input input {
     flex: 1;
-    border: 2px solid #000;
+    border: none;
     padding: .5rem 1rem;
+    background-color: #f0efef;
     border-radius: .3rem;
     -webkit-border-radius: .3rem;
     -moz-border-radius: .3rem;
@@ -79,11 +86,11 @@
     outline: none;
 }
   .chat-input input:focus{
-    border-color: #4CAF50;
+    border-color: var(--t-10);
   }
   
   .chat-input button {
-    background-color: #4CAF50;
+    background-color: var(--t-10);
     color: white;
     padding: .5rem 1rem;
     margin-left: 1rem;
@@ -94,6 +101,36 @@
   }
   
   .chat-input button:hover {
-    background-color: #45a049;
+    opacity: 0.7;
   }
   
+
+  @media (max-width:764px) {
+    .chat-container{
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+    }
+    .chat-container h1{
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      display: inline-block;
+      padding: .3rem;
+      background-color: var(--t-30);
+      color: var(--t-60);
+    }
+    .chat-display{
+      padding: 3rem .3rem;
+      border: none;
+      height: 100%;
+      font-size: .9rem;
+    }
+    .chat-input{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }

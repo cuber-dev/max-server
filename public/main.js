@@ -90,22 +90,26 @@
 const chatDisplay = document.getElementById('chat-display');
 const userInput = document.getElementById('user-input');
 
-function addBotResponse(response) {
-  const botBubble = document.createElement('div');
+function getBubble(){
+  const div = document.createElement('div');
   const para = document.createElement('p');
-  botBubble.classList.add('chat-bubble', 'bot');
+  return { div , para }
+}
+
+function addBotResponse(response) {
+  const { div , para } = getBubble()
+  div.classList.add('chat-bubble', 'bot');
   para.textContent = response;
-  botBubble.appendChild(para);
-  chatDisplay.appendChild(botBubble);
+  div.appendChild(para);
+  chatDisplay.appendChild(div);
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
 }
 function addUserResponse(response) {
-  const userBubble = document.createElement('div');
-  const para = document.createElement('p');
-  userBubble.classList.add('chat-bubble', 'user');
+  const { div , para } = getBubble()
+  div.classList.add('chat-bubble', 'user');
   para.textContent = response;
-  userBubble.appendChild(para);
-  chatDisplay.appendChild(userBubble);
+  div.appendChild(para);
+  chatDisplay.appendChild(div);
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
 }
 function sendMessage() {
