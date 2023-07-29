@@ -1,7 +1,7 @@
 const express = require('express');
 const ytdl = require('ytdl-core');
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 const cors = require('cors')
 
 
