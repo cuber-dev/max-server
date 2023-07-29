@@ -2,18 +2,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Meta-tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="title" content="TekTrailz">
+  <meta name="description" content="" />
+  <meta name="author" content="TekTrailz" />
+  
+  <!-- Page title -->
   <title>YouTube Downloader Chatbot</title>
+  
+  <!-- Open-Graph-meta-tags -->
+  <meta property="og:title" content="TekTrailz" />
+  <meta property="og:description" content="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="" />
+  
+  <!-- Twitter-meta-tags -->
+  <meta name="twitter:title" content="TekTrailz" />
+  <meta name="twitter:description" content="" />
+  <meta name="twitter:image" content="" />
+  
+   
+  <!-- Goggle-Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Google-Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  
+  <!-- FontAwesome-Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Fevicon  -->
+  <link rel="shortcut icon" href="" type="image/x-icon">
+  <link rel="favicon icon" href="" type="image/x-icon">
+  
+  <!-- StyleSheet -->
   <link rel="stylesheet" href="style.css">
+  
 </head>
 <body>
   <div class="chat-container">
     <h1 class="chat-title">yt-vd-bot</h1>
     <div class="chat-display" id="chat-display">
-      <div class="chat-bubble bot">
-        <p>Hello! I am the YouTube Downloader Chatbot. You can use commands "audio <YouTube URL>" or "video <YouTube URL>" to download audio or video.</p>
-      </div>
+      <!-- <div class="chat-bubble bot download">
+        <video src="video.mp4" controls class="video"></video>
+        <audio src="music.mp3" controls class="audio"></audio>  
+        <h3 class="media-title">Title : medianame.mp4</h3>  
+        <p class="media-type">Media-Type : Audio</p> 
+        <p class="media-desc">Description : Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti adipisci amet animi ducimus temporibus tenetur ratione quod maxime error sed. At atque quidem earum excepturi ducimus eos maiores explicabo autem?</p>   
+        <a class="download-btn">Download <i class="fa-solid fa-file-arrow-down"></i></a>
+      </div> -->
     </div>
     <div class="chat-input">
       <input type="text" id="user-input" placeholder="Enter your command here...">

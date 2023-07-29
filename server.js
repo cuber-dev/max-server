@@ -3,7 +3,6 @@ const ytdl = require('ytdl-core');
 const app = express();
 const port = 8000;
 const cors = require('cors')
-const path = require('path')
 
 
 app.use(cors({
@@ -11,11 +10,11 @@ app.use(cors({
 }))
 app.use(express.static('public'));
 
-
+ 
 function sanitizeFilename(filename) {
   return filename.replace(/[^\w\s.-]/g, '_');
-}
-
+} 
+ 
 // route done
 app.get('/getVideoInfo', async (req, res) => {
   try {
@@ -36,12 +35,12 @@ app.get('/getVideoInfo', async (req, res) => {
         fileName : sanitizeFilename(info.videoDetails.title) + '.mp4'
       },
     }
-    res.json(response);
-  } catch (error) {
+    res.json(response); 
+  } catch (error) { 
     console.error('Error:', error);
     res.status(500).send('An error occurred');
   }
-});
+}); 
 
 
 // quality in progress
