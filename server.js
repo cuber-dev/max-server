@@ -74,7 +74,7 @@ app.get('/download/video', async (req, res) => {
         formatToDownload = format;
         break;
       }
-    }
+    }   
 
     // If no format is found (desiredPixels is too low), use the lowest available format
     if (!formatToDownload) {
@@ -90,7 +90,7 @@ app.get('/download/video', async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('An error occurred');
-  }
+  } 
 });
 
 

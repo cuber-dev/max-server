@@ -74,10 +74,10 @@ const getMedia = async (youtubeURL) => {
 
   try {
     const videoInfo = await getVideoInfo(url);
-    if(videoInfo) addBotResponse(`recieved ${media.type} meta info`)
+    if(videoInfo) addBotResponse(`recieved ${media.type} meta info...`)
     const downloadUrl = `/download/${media.type}?url=${encodeURIComponent(url)}&pixels=${pixels}`;
     const blob = await getVideo(downloadUrl);
-    if(blob) addBotResponse(`recieved ${media.type}`)
+    if(blob) addBotResponse(`recieved ${media.type}...`)
 
     setVideoDetails(blob,videoInfo);
   } catch (error) {
