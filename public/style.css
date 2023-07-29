@@ -1,7 +1,7 @@
 :root{
   --t-60 : white;
-  --t-30 : rgb(61, 60, 60);
-  --t-10 : rgb(221, 151, 22);
+  --t-30 : #3d3c3c;
+  --t-10 : #dd9716;
 }
   body {
     font-family: Arial, sans-serif;
@@ -56,6 +56,9 @@
   
   .chat-bubble.bot p{
     background-color: #e4e4e0;
+  }
+  .chat-bubble.bot .bot-logo{
+    width: 50px;
   }
   .chat-bubble.bot .video{
     width: 85%;
