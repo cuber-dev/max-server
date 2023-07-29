@@ -1,6 +1,9 @@
 body {
     font-size: 15pt;
 }
+html{
+  scroll-behavior : smooth; 
+}
 :root{ 
    --t-60 : white; 
    --t-30 : #3d3c3c; 
@@ -19,6 +22,7 @@ body {
    } 
    h1 { 
      text-align: center; 
+     z-index : 55;
    } 
   
    .chat-container { 
