@@ -35,12 +35,7 @@ function setVideoDetails(blob, videoInfo) {
   media.blobUrl = URL.createObjectURL(blob);
   media.fileName = videoInfo.generalInfo.fileName;
   media.desc = videoInfo.videoDetails.description;
-  if(media.blobUrl && media.fileName && media.desc) addBotResponse(`
-    ${media.blobUrl},
-    ${media.fileName},
-    ${media.desc}
-  `)
-  setForDownload()
+  if(media.blobUrl && media.fileName) setForDownload()
 }
 function setForDownload() {
   const { container , mediaElement, title , desc , downloadBtn } = getDownloadElements()
@@ -170,6 +165,6 @@ userInput.addEventListener('keydown', (event) => {
 });
 
 
-// window.onload = function(){
-//   addBotResponse(`Hi there, I'm a bot. Type 'help' to see the list of commands`)
-// }
+window.onload = function(){
+  addBotResponse(`Hi there, I'm a bot. Type 'help' to see the list of commands`)
+}

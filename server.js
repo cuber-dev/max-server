@@ -6,8 +6,8 @@ const cors = require('cors')
 
 
 app.use(cors({
-  origin: '*'
-}))
+  origin: '*' 
+}))   
 app.use(express.static('public'));
 
  
@@ -34,7 +34,7 @@ app.get('/getVideoInfo', async (req, res) => {
         title : info.videoDetails.title,
         fileName : sanitizeFilename(info.videoDetails.title) + '.mp4'
       },
-    }
+    } 
     res.json(response); 
   } catch (error) { 
     console.error('Error:', error);
