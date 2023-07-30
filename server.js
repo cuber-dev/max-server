@@ -1,7 +1,7 @@
 const express = require('express');
 const ytdl = require('ytdl-core');
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 const cors = require('cors')
 
 
@@ -13,7 +13,7 @@ app.use(express.static('public'));
  
 function sanitizeFilename(filename) {
   return filename.replace(/[^\w\s.-]/g, '_');
-} 
+}  
  
 // route done
 app.get('/getVideoInfo', async (req, res) => {
