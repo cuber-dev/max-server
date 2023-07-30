@@ -32,7 +32,7 @@ app.get('/getVideoInfo', async (req, res) => {
       videoDetails : info.videoDetails,
       generalInfo : {
         title : info.videoDetails.title,
-        fileName : `${sanitizeFilename(info.videoDetails.title)}.${type === 'audio' ? 'mp3' : 'mp4'}`,
+        fileName : `${sanitizeFilename(info.videoDetails.title)}.${type === 'audio' ? 'm4a' : 'mp4'}`,
       },
     } 
     res.json(response); 
