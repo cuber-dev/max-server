@@ -50,6 +50,7 @@ function setDesc(desc) {
       isHasLinks = true
       return anchor(word)
     }else if(word.startsWith('#')){
+      isHasLinks = true
       return hashTag(word)
     }
     return word
