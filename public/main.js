@@ -15,7 +15,7 @@ async function fetchMediaFile(url) {
 }
 
 async function fetchMediaInfo(url) {
-  const response = await fetch(`/getVideoInfo?url=${encodeURIComponent(url)}`);
+  const response = await fetch(`/getVideoInfo?url=${encodeURIComponent(url)}&type=${media.type}`);
   return await response.json()
 }
 
@@ -92,6 +92,7 @@ const getMedia = async (youtubeURL) => {
   try {
     const mediaInfo = await fetchMediaInfo(url);
     if(mediaInfo) addBotResponse(`recieved ${media.type} meta info...`)
+
     const downloadUrl = `/download/${media.type}?url=${encodeURIComponent(url)}&pixels=${pixels}`;
     const blob = await fetchMediaFile(downloadUrl);
     if(blob) addBotResponse(`recieved ${media.type}...`)

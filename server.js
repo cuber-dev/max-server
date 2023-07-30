@@ -18,7 +18,7 @@ function sanitizeFilename(filename) {
 // route done
 app.get('/getVideoInfo', async (req, res) => {
   try {
-    const { url } = req.query;
+    const { url , type } = req.query;
 
     if (!ytdl.validateURL(url)) {
       res.json({
@@ -32,7 +32,7 @@ app.get('/getVideoInfo', async (req, res) => {
       videoDetails : info.videoDetails,
       generalInfo : {
         title : info.videoDetails.title,
-        fileName : sanitizeFilename(info.videoDetails.title) + '.mp4'
+        fileName : `${sanitizeFilename(info.videoDetails.title)}.${type === 'audio' ? 'mp3' : 'mp4'}`,
       },
     } 
     res.json(response); 
