@@ -5,9 +5,10 @@ let media = {
   fileName : '',
   type : '',
   blobUrl : '',
-  desc : '' 
+  desc : ''  
 }
-const anchor = (url) => `<a href="${url}" target="_blank">${url}</a>`
+const anchor = url => `<a href="${url}" target="_blank">${url}</a>`
+const hashTag = tag => `<a href="https://www.youtube.com/hashtag/${tag.replace('#','')}" target="_blank">${tag}</a>`
  
 async function fetchMediaFile(url) {
   const response = await fetch(url);
@@ -38,6 +39,37 @@ function getDownloadElements() {
 
   return { container , mediaElement , title , desc , downloadBtn };
 }
+
+function setDesc(desc) { 
+  // let words  = media.desc.split(" ")
+  let words = media.desc.split(/\s+/); // Use a regex to split words with any whitespace character
+  let isHasLinks = false
+  words = words.map(word => {
+    word = word.replace(`"`,'')
+    if(word.startsWith('http')){
+      isHasLinks = true
+      return anchor(word)
+    }else if(word.startsWith('#')){
+      return hashTag(word)
+    }
+    return word
+  })
+  isHasLinks ?
+  words.forEach(word => {
+    const span = document.createElement('span');
+    span.innerHTML = word + " ";
+    
+    desc.appendChild(span);
+
+    if(span.innerText.startsWith('http')) {
+      const br = document.createElement('br')
+      desc.appendChild(br)  
+    }
+  }) : desc.innerText = media.desc; 
+  desc.classList.add('media-desc');
+}
+
+
 function setForDownload() {
   const { container , mediaElement, title , desc , downloadBtn } = getDownloadElements()
   
@@ -50,24 +82,7 @@ function setForDownload() {
   title.innerText = media.fileName;
   title.classList.add('media-title');
 
-  let words  = media.desc.split(" ")
-  words = words.map(word => {
-    if(word.startsWith('http')) return anchor(word)
-    return word
-  })
-
-  words.forEach(word => {
-    const span = document.createElement('span');
-    span.innerHTML = word + " ";
-    
-    desc.appendChild(span);
-
-    if(span.innerText.startsWith('http')) {
-      const br = document.createElement('br')
-      desc.appendChild(br)  
-    }
-  })
-  desc.classList.add('media-desc');
+  setDesc(desc)
 
   downloadBtn.href = media.blobUrl;
   downloadBtn.download = media.fileName;
@@ -129,21 +144,14 @@ function addUserResponse(response) {
 }
 function addCommands(){
   const commands = [
-    {
-      msg : 'Available commands:',
-    },
-    {
-      msg : 'video <YouTube URL>',
-    },
-    {
-      msg : 'audio <YouTube URL>',
-    },
-    {
-      msg : 'clear (to clear messages except media files)',
-    }
-  ]
+    'Available commands:',
+    'video <YouTube URL>',
+    'audio <YouTube URL>',
+    'clear (to clear messages except media files)',
+  ];
+  
   for(msg of commands){
-    addBotResponse(msg.msg)
+    addBotResponse(msg)
   }
 }
 
@@ -155,7 +163,6 @@ function processUserRequest(userMessage){
   if (match) {
     media.type = match[1].toLowerCase(); // 'video' or 'audio'
     const youtubeURL = match[2]; // YouTube URL
-
     const response = `Request received! You requested ${media.type} from YouTube URL: ${anchor(youtubeURL)} ,this will be ready in a couple of seconds...`;
     addBotResponse(response,'innerHTML');
     getMedia(youtubeURL);
@@ -179,26 +186,22 @@ function sendMessage() {
   if (!userMessage) return;
   addUserResponse(userMessage)
   userInput.value = '';
-  switch(userMessage.toLowerCase()){
-    case 'hi' :
-    case 'hello' :
-    case 'hey':
-      addBotResponse('Hello there!')
-      break;
-    case 'help':
-    case 'help!':
-    case '?':
-      addCommands()
-      break;
-    case 'clear':
-    case 'clear!':
-    case 'cls':
-    case 'cls!':
-    case 'clear messages':
-      clearMessages()
-      break;
-    default:
-      processUserRequest(userMessage)
+  const commands = {
+    greetings: ['hi', 'hello', 'hello there','hello there!','hey'],
+    help: ['help', 'help!', '?'],
+    clear: ['clear', 'clear!', 'cls', 'cls!', 'clear messages'],
+  };
+  
+  const userMessageLowerCase = userMessage.toLowerCase();
+  
+  if (commands.greetings.includes(userMessageLowerCase)) {
+    addBotResponse('Hello there!');
+  } else if (commands.help.includes(userMessageLowerCase)) {
+    addCommands();
+  } else if (commands.clear.includes(userMessageLowerCase)) {
+    clearMessages();
+  } else {
+    processUserRequest(userMessage);
   }
   
 }

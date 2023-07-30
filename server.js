@@ -116,8 +116,7 @@ app.get('/download/audio', async (req, res) => {
 
     // Set response headers for the file download
     res.header('Content-Disposition', `attachment; filename="${sanitizeFilename(info.videoDetails.title)}.${selectedFormat.container}"`);
-    res.header('Content-Type', 'audio/mp3'); // You can adjust the Content-Type based on the selected format
-
+    res.header('Content-Type', 'audio/mp3'); 
     // Pipe the audio stream to the response
     ytdl(url, { format: selectedFormat }).pipe(res);
   } catch (error) {
