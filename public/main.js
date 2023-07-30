@@ -5,8 +5,9 @@ let media = {
   fileName : '',
   type : '',
   blobUrl : '',
-  desc : ''
+  desc : '' 
 }
+const anchor = (url) => `<a href="${url}" target="_blank">${url}</a>`
  
 async function fetchMediaFile(url) {
   const response = await fetch(url);
@@ -47,16 +48,14 @@ function setForDownload() {
   mediaElement.classList.add(media.type)
 
   title.innerText = media.fileName;
-  title.classList.add('media-type');
+  title.classList.add('media-title');
 
   let words  = media.desc.split(" ")
-  console.log(words)
-
   words = words.map(word => {
-    if(word.startsWith('http')) return `<a href="${word} target="_blank">${word}</a><b>`
+    if(word.startsWith('http')) return anchor(word)
     return word
   })
-  console.log(words)
+
   words.forEach(word => {
     const span = document.createElement('span');
     span.innerHTML = word + " ";
@@ -111,7 +110,7 @@ function getBubble(){
   return { div , para }
 }
 
-function addBotResponse(response,type = 'innerText') {
+function addBotResponse(response,type = 'textContent') {
   const { div , para } = getBubble()
   div.classList.add('chat-bubble', 'bot');
   para[type] = response;
@@ -156,13 +155,13 @@ function processUserRequest(userMessage){
     media.type = match[1].toLowerCase(); // 'video' or 'audio'
     const youtubeURL = match[2]; // YouTube URL
 
-    const response = `Request received! You requested ${media.type} from YouTube URL: <a href="${youtubeURL}" target="_blank">${youtubeURL}</a> this will be ready in a couple of seconds...`;
+    const response = `Request received! You requested ${media.type} from YouTube URL: ${anchor(youtubeURL)} ,this will be ready in a couple of seconds...`;
     addBotResponse(response,'innerHTML');
     getMedia(youtubeURL);
   } else {
     const response = "I'm sorry, I couldn't understand your request. Please use commands like 'video <YouTube URL>' or 'audio <YouTube URL>'.";
     addBotResponse(response);
-  }
+  } 
 }
 
 

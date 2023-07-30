@@ -77,11 +77,13 @@ html{
    } 
    .chat-bubble.bot .bot-logo{ 
      width: 50px; 
-   } 
+    } 
+    /* CSS for the download bubble */
+
    .chat-bubble.bot .video{ 
      width: 85%; 
    } 
-    /* CSS for the download bubble */
+
   .chat-bubble.bot.download {
     background-color: #e4e4e0;
     width: 95%;
@@ -92,29 +94,19 @@ html{
     -moz-border-radius: .2rem;
     -ms-border-radius: .2rem;
     -o-border-radius: .2rem;
-    overflow: hidden;
   }
 
-  /* Keyframes for the fadeIn animation */
-  @keyframes fadeIn {
-    from {
-      height: 0;
-      opacity: 0;
-    }
-    to {
-      height: auto;
-      opacity: 1;
-    }
-  }
-
-   .chat-bubble.bot.download p, 
-   .chat-bubble.bot.download h3{ 
+   .chat-bubble.bot.download .media-desc, 
+   .chat-bubble.bot.download .media-title{ 
      width: 100%; 
      max-width: 100%; 
      padding: 0; 
      margin-top: .8rem; 
    } 
-     .chat-bubble.bot.download h3{ 
+   .chat-bubble.bot.download .media-desc{
+    padding: 0 .3rem;
+   }
+     .chat-bubble.bot.download .media-title{ 
        line-height: 2rem;
      }
    .chat-bubble.bot.download .download-btn{ 
@@ -149,6 +141,10 @@ html{
    -ms-transform: scale(1.2); 
    -o-transform: scale(1.2); 
  } 
+
+
+
+ 
    .chat-bubble.user p{ 
      background-color: var(--t-30); 
      color: white; 

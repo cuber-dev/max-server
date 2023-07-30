@@ -100,11 +100,11 @@ app.get('/download/audio', async (req, res) => {
     const { url } = req.query;
     console.log(url , 'audio')
     // Validate the YouTube URL
-    if (!ytdl.validateURL(url)) {
+    if (!ytdl.validateURL(url)) {  
       res.json({
         error: 'Invalid YouTube URL'
       });
-      return;
+      return;  
     }   
 
     // Get available formats for the audio
