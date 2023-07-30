@@ -1,7 +1,5 @@
-// const media.blobUrlInput = document.getElementById('media.blobUrl');
-// const pixelsSelect = document.getElementById('pixels');
-// const downloadBtn = document.getElementById('download-btn');
-// const form = document.querySelector('form')
+const chatDisplay = document.getElementById('chat-display');
+const userInput = document.getElementById('user-input');
 
 let media = {
   fileName : '',
@@ -10,16 +8,25 @@ let media = {
   desc : ''
 }
  
-async function getVideo(url) {
+async function fetchMediaFile(url) {
   const response = await fetch(url);
   return await response.blob();
 }
 
-async function getVideoInfo(url) {
+async function fetchMediaInfo(url) {
   const response = await fetch(`/getVideoInfo?url=${encodeURIComponent(url)}`);
   return await response.json()
 }
 
+
+
+
+function setMediaDetails(blob, mediaInfo) {
+  media.blobUrl = URL.createObjectURL(blob);
+  media.fileName = mediaInfo.generalInfo.fileName;
+  media.desc = mediaInfo.videoDetails.description;
+  if(media.blobUrl && media.fileName) setForDownload()
+}
 
 function getDownloadElements() {
   const container = document.createElement('div');
@@ -29,13 +36,6 @@ function getDownloadElements() {
   const downloadBtn = document.createElement('a');
 
   return { container , mediaElement , title , desc , downloadBtn };
-}
-
-function setVideoDetails(blob, videoInfo) {
-  media.blobUrl = URL.createObjectURL(blob);
-  media.fileName = videoInfo.generalInfo.fileName;
-  media.desc = videoInfo.videoDetails.description;
-  if(media.blobUrl && media.fileName) setForDownload()
 }
 function setForDownload() {
   const { container , mediaElement, title , desc , downloadBtn } = getDownloadElements()
@@ -49,7 +49,25 @@ function setForDownload() {
   title.innerText = media.fileName;
   title.classList.add('media-type');
 
-  desc.innerText = media.desc;
+  let words  = media.desc.split(" ")
+  console.log(words)
+
+  words = words.map(word => {
+    if(word.startsWith('http')) return `<a href="${word} target="_blank">${word}</a><b>`
+    return word
+  })
+  console.log(words)
+  words.forEach(word => {
+    const span = document.createElement('span');
+    span.innerHTML = word + " ";
+    
+    desc.appendChild(span);
+
+    if(span.innerText.startsWith('http')) {
+      const br = document.createElement('br')
+      desc.appendChild(br)  
+    }
+  })
   desc.classList.add('media-desc');
 
   downloadBtn.href = media.blobUrl;
@@ -73,21 +91,19 @@ const getMedia = async (youtubeURL) => {
   const pixels = 720
 
   try {
-    const videoInfo = await getVideoInfo(url);
-    if(videoInfo) addBotResponse(`recieved ${media.type} meta info...`)
+    const mediaInfo = await fetchMediaInfo(url);
+    if(mediaInfo) addBotResponse(`recieved ${media.type} meta info...`)
     const downloadUrl = `/download/${media.type}?url=${encodeURIComponent(url)}&pixels=${pixels}`;
-    const blob = await getVideo(downloadUrl);
+    const blob = await fetchMediaFile(downloadUrl);
     if(blob) addBotResponse(`recieved ${media.type}...`)
 
-    setVideoDetails(blob,videoInfo);
+    setMediaDetails(blob,mediaInfo);
   } catch (error) {
     console.error('Error:', error);
     alert('An error occurred while downloading the video.');
   }
 };
 
-const chatDisplay = document.getElementById('chat-display');
-const userInput = document.getElementById('user-input');
 
 function getBubble(){
   const div = document.createElement('div');
@@ -95,10 +111,10 @@ function getBubble(){
   return { div , para }
 }
 
-function addBotResponse(response) {
+function addBotResponse(response,type = 'innerText') {
   const { div , para } = getBubble()
   div.classList.add('chat-bubble', 'bot');
-  para.textContent = response;
+  para[type] = response;
   div.appendChild(para);
   chatDisplay.appendChild(div);
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
@@ -111,8 +127,28 @@ function addUserResponse(response) {
   chatDisplay.appendChild(div);
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
 }
+function addCommands(){
+  const commands = [
+    {
+      msg : 'Available commands:',
+    },
+    {
+      msg : 'video <YouTube URL>',
+    },
+    {
+      msg : 'audio <YouTube URL>',
+    },
+    {
+      msg : 'clear (to clear messages except media files)',
+    }
+  ]
+  for(msg of commands){
+    addBotResponse(msg.msg)
+  }
+}
 
-function processRequest(userMessage){
+
+function processUserRequest(userMessage){
   // Process user's request
   const commandRegex = /^(video|audio)\s+(https?:\/\/[^\s]+)/i;
   const match = userMessage.match(commandRegex);
@@ -120,14 +156,17 @@ function processRequest(userMessage){
     media.type = match[1].toLowerCase(); // 'video' or 'audio'
     const youtubeURL = match[2]; // YouTube URL
 
-    const response = `Request received! You requested ${media.type} from YouTube URL: ${youtubeURL} this will be ready in a couple of seconds...`;
-    addBotResponse(response);
+    const response = `Request received! You requested ${media.type} from YouTube URL: <a href="${youtubeURL}" target="_blank">${youtubeURL}</a> this will be ready in a couple of seconds...`;
+    addBotResponse(response,'innerHTML');
     getMedia(youtubeURL);
   } else {
     const response = "I'm sorry, I couldn't understand your request. Please use commands like 'video <YouTube URL>' or 'audio <YouTube URL>'.";
     addBotResponse(response);
   }
 }
+
+
+
 function clearMessages(){
   const messages = chatDisplay.querySelectorAll('.chat-bubble:not(.bot.download)')
   for(x of messages){
@@ -147,13 +186,19 @@ function sendMessage() {
       addBotResponse('Hello there!')
       break;
     case 'help':
-      addBotResponse('Available commands: video <YouTube URL> or audio <YouTube URL> and clear')
+    case 'help!':
+    case '?':
+      addCommands()
       break;
     case 'clear':
+    case 'clear!':
+    case 'cls':
+    case 'cls!':
+    case 'clear messages':
       clearMessages()
       break;
     default:
-      processRequest(userMessage)
+      processUserRequest(userMessage)
   }
   
 }
@@ -165,6 +210,31 @@ userInput.addEventListener('keydown', (event) => {
 });
 
 
-window.onload = function(){
-  addBotResponse(`Hi there, I'm a bot. Type 'help' to see the list of commands`)
+function checkUser() {
+  const isPrevUser = localStorage.getItem('isPrevUser') || false;
+  let msg = '';
+
+  if (!isPrevUser) {
+    msg = `
+      Hi there! I'm a YouTube video downloader bot. 
+      I can download videos and audio from YouTube.
+      Just type 'help' for a list of available commands.
+      If you have used me before, welcome back! 
+      I have some awesome new features waiting for you.
+    `;
+    
+    localStorage.setItem('isPrevUser', true);
+  } else {
+    msg = `
+      Welcome back! I'm the YouTube video downloader bot. 
+      I'm here to help you download your favorite videos and audio from YouTube.
+      Just type 'help' to see the list of available commands.
+      If you're new here, welcome! Feel free to ask me to download anything you need.
+    `;
+  }
+  
+  addBotResponse(msg);
 }
+
+
+window.addEventListener('load',checkUser)

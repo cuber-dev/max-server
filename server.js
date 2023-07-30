@@ -38,7 +38,7 @@ app.get('/getVideoInfo', async (req, res) => {
     res.json(response); 
   } catch (error) { 
     console.error('Error:', error);
-    res.status(500).send('An error occurred');
+    res.status(500).send('An error occurred while fetching audio info');
   }
 }); 
 
@@ -89,7 +89,7 @@ app.get('/download/video', async (req, res) => {
     ytdl(url, { format: formatToDownload }).pipe(res);
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).send('An error occurred');
+    res.status(500).send('An error occurred while fetching video');
   } 
 });
 
@@ -101,8 +101,11 @@ app.get('/download/audio', async (req, res) => {
     console.log(url , 'audio')
     // Validate the YouTube URL
     if (!ytdl.validateURL(url)) {
-      throw new Error('Invalid YouTube URL');
-    }
+      res.json({
+        error: 'Invalid YouTube URL'
+      });
+      return;
+    }   
 
     // Get available formats for the audio
     const info = await ytdl.getInfo(url);
@@ -119,9 +122,9 @@ app.get('/download/audio', async (req, res) => {
     ytdl(url, { format: selectedFormat }).pipe(res);
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).send('An error occurred');
-  }
-});
+    res.status(500).send('An error occurred while fetching audio');
+  }  
+});  
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
