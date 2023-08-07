@@ -1,38 +1,53 @@
+const chatContainer = document.getElementById('chat-container');
 const chatDisplay = document.getElementById('chat-display');
 const userInput = document.getElementById('user-input');
+const loading = document.querySelector('.loader')
 
-let media = {
-  fileName : '',
-  type : '',
-  blobUrl : '',
-  desc : ''  
-}
+
+const mediaObjects = []
 const anchor = url => `<a href="${url}" target="_blank">${url}</a>`
 const hashTag = tag => `<a href="https://www.youtube.com/hashtag/${tag.replace('#','')}" target="_blank">${tag}</a>`
  
+const loader = bool => {
+  if(bool) {
+    chatDisplay.appendChild(loading)
+    loading.classList.add('show');
+    chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    return
+  }
+
+  loading.classList.remove('show');
+}
+
 async function fetchMediaFile(url) {
   const response = await fetch(url);
   return await response.blob();
 }
 
-async function fetchMediaInfo(url) {
-  const response = await fetch(`/getVideoInfo?url=${encodeURIComponent(url)}&type=${media.type}`);
+async function fetchMediaInfo(url,type) {
+  const response = await fetch(`/getVideoInfo?url=${encodeURIComponent(url)}&type=${type}`);
   return await response.json()
 }
 
-
-
-
-function setMediaDetails(blob, mediaInfo) {
-  media.blobUrl = URL.createObjectURL(blob);
-  media.fileName = mediaInfo.generalInfo.fileName;
-  media.desc = mediaInfo.videoDetails.description;
-  if(media.blobUrl && media.fileName) setForDownload()
+class Media{
+  constructor(){
+    this.blobUrl = ''
+    this.name = '',
+    this.desc = '',
+    this.type = ''
+  }
 }
 
-function getDownloadElements() {
+
+function setMediaDetails(newMediaObj,blob, mediaInfo) {
+  newMediaObj.blobUrl = URL.createObjectURL(blob);
+  newMediaObj.fileName = mediaInfo.generalInfo.fileName;
+  newMediaObj.desc = mediaInfo.videoDetails.description;
+  if(newMediaObj.blobUrl && newMediaObj.fileName) setForDownload(newMediaObj)
+}
+function getDownloadElements(type) {
   const container = document.createElement('div');
-  const mediaElement = document.createElement(media.type);
+  const mediaElement = document.createElement(type);
   const title = document.createElement('h3');
   const desc = document.createElement('p');
   const downloadBtn = document.createElement('a');
@@ -40,9 +55,9 @@ function getDownloadElements() {
   return { container , mediaElement , title , desc , downloadBtn };
 }
 
-function setDesc(desc) { 
+function setDesc(e,desc) { 
   // let words  = media.desc.split(" ")
-  let words = media.desc.split(/\s+/); // Use a regex to split words with any whitespace character
+  let words = desc.split(/\s+/); // Use a regex to split words with any whitespace character
   let isHasLinks = false
   words = words.map(word => {
     word = word.replace(`"`,'')
@@ -60,33 +75,33 @@ function setDesc(desc) {
     const span = document.createElement('span');
     span.innerHTML = word + " ";
     
-    desc.appendChild(span);
+    e.appendChild(span);
 
     if(span.innerText.startsWith('http')) {
       const br = document.createElement('br')
-      desc.appendChild(br)  
+      e.appendChild(br)  
     }
-  }) : desc.innerText = media.desc; 
-  desc.classList.add('media-desc');
+  }) : e.innerText = desc; 
+  e.classList.add('media-desc');
 }
 
 
-function setForDownload() {
-  const { container , mediaElement, title , desc , downloadBtn } = getDownloadElements()
+function setForDownload(newMediaObj) {
+  const { container , mediaElement, title , desc , downloadBtn } = getDownloadElements(newMediaObj.type)
   
   container.classList.add('chat-bubble','bot','download');
 
-  mediaElement.src = media.blobUrl;
+  mediaElement.src = newMediaObj.blobUrl;
   mediaElement.controls = true;
-  mediaElement.classList.add(media.type)
+  mediaElement.classList.add(newMediaObj.type)
 
-  title.innerText = media.fileName;
+  title.innerText = newMediaObj.fileName;
   title.classList.add('media-title');
 
-  setDesc(desc)
+  setDesc(desc,newMediaObj.desc)
 
-  downloadBtn.href = media.blobUrl;
-  downloadBtn.download = media.fileName;
+  downloadBtn.href = newMediaObj.blobUrl;
+  downloadBtn.download = newMediaObj.fileName;
   downloadBtn.innerHTML = `Download <i class="fa-solid fa-file-arrow-down"></i>`;
   downloadBtn.classList.add('download-btn');
 
@@ -95,25 +110,24 @@ function setForDownload() {
   container.appendChild(title);
   container.appendChild(desc);
   container.appendChild(downloadBtn);
-
+  loader(false)
   chatDisplay.appendChild(container);
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
 }
 
-const getMedia = async (youtubeURL) => {
+const getMedia = async (youtubeURL,newMediaObj) => {
 
   const url = youtubeURL;
   const pixels = 720
 
   try {
-    const mediaInfo = await fetchMediaInfo(url);
-    if(mediaInfo) addBotResponse(`recieved ${media.type} meta info...`)
+    const mediaInfo = await fetchMediaInfo(url, newMediaObj.type);
 
-    const downloadUrl = `/download/${media.type}?url=${encodeURIComponent(url)}&pixels=${pixels}`;
+    const downloadUrl = `/download/${newMediaObj.type}?url=${encodeURIComponent(url)}&pixels=${pixels}`;
     const blob = await fetchMediaFile(downloadUrl);
-    if(blob) addBotResponse(`recieved ${media.type}...`)
+    
+    setMediaDetails(newMediaObj,blob,mediaInfo);
 
-    setMediaDetails(blob,mediaInfo);
   } catch (error) {
     console.error('Error:', error);
     alert('An error occurred while downloading the video.');
@@ -162,11 +176,15 @@ function processUserRequest(userMessage){
   const commandRegex = /^(video|audio)\s+(https?:\/\/[^\s]+)/i;
   const match = userMessage.match(commandRegex);
   if (match) {
-    media.type = match[1].toLowerCase(); // 'video' or 'audio'
+    mediaObjects.push(new Media())
+    const newMediaObj = mediaObjects[mediaObjects.length-1]
+    newMediaObj.type = match[1].toLowerCase(); // 'video' or 'audio'
     const youtubeURL = match[2]; // YouTube URL
-    const response = `Request received! You requested ${media.type} from YouTube URL: ${anchor(youtubeURL)} ,this will be ready in a couple of seconds...`;
+    const response = `Request received! You requested ${newMediaObj.type} from YouTube URL: ${anchor(youtubeURL)} ,this will be ready in a couple of seconds...`;
     addBotResponse(response,'innerHTML');
-    getMedia(youtubeURL);
+    loader(true)
+
+    getMedia(youtubeURL,newMediaObj);
   } else {
     const response = "I'm sorry, I couldn't understand your request. Please use commands like 'video <YouTube URL>' or 'audio <YouTube URL>'.";
     addBotResponse(response);
