@@ -1,5 +1,7 @@
 const express = require('express');
 const ytdl = require('ytdl-core');
+const fs = require('fs')
+const userQueries = Array.from(require('./public/static/userQueries.json'))
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require('cors')
@@ -14,12 +16,35 @@ app.use(express.static('public'));
 function sanitizeFilename(filename) {
   return filename.replace(/[^\w\s.-]/g, '_');
 }  
- 
-// route done
-app.get('/getVideoInfo', async (req, res) => {
-  try {
-    const { url , type } = req.query;
 
+function storeUserQuery(req, res, next){
+    const { url , type } = req.query;
+    const time = new Date();
+    const hours = time.getHours().toString()
+    const minutes = time.getMinutes().toString()
+    const seconds = time.getSeconds().toString()
+    const timeLabel = `${hours}:${minutes}:${seconds}`;
+    
+    const date = new Intl.DateTimeFormat('en-US').format(time);
+    
+    const dateTimeLabel = `${date} ${timeLabel}`;
+    
+    const userQuery = `${type} - ${url} - ${dateTimeLabel} \n`
+    
+    userQueries.push({
+      userId : "1",
+      query : userQuery
+    })
+    fs.writeFileSync('./public/static/userQueries.json', JSON.stringify(userQueries)) 
+    console.log("Total requests : ",userQueries.length)
+    next();
+}
+
+// route done
+app.get('/getVideoInfo',storeUserQuery, async (req, res) => {
+  try {
+     const { url , type } = req.query;
+    
     if (!ytdl.validateURL(url)) {
       res.json({
         error: 'Invalid YouTube URL'

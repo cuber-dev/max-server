@@ -149,7 +149,6 @@ html{
      color: white; 
    } 
    .chat-bubble.user { 
-     text-align: right; 
      display: flex; 
      justify-content: right; 
    } 
