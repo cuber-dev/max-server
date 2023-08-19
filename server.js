@@ -144,8 +144,8 @@ app.get('/download/audio', async (req, res) => {
     const selectedFormat = formats[0];
 
     // Set response headers for the file download
-    res.header('Content-Disposition', `attachment; filename="${sanitizeFilename(info.videoDetails.title)}.${selectedFormat.container}"`);
-    res.header('Content-Type', 'audio/mp3'); 
+    res.header('Content-Disposition', `attachment; filename="${sanitizeFilename(info.videoDetails.title)}.m4a"`);
+    res.header('Content-Type', 'audio/m4a'); 
     // Pipe the audio stream to the response
     ytdl(url, { format: selectedFormat }).pipe(res);
   } catch (error) {
