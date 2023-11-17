@@ -1,0 +1,19 @@
+{
+  "name": "YT-Video/Audio-Downloader-Bot",
+  "short_name" : "Maxpark",
+  "description": "Youtube video and audio downloader bot ,also avalible on tg : @Maxpark09_bot ",
+  "version": "4.0.0",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dd9716",
+  "icons": [
+    {
+      "src": "20230730_190450_0000.png",
+      "sizes": "300x300",
+      "type": "image/png"
+    }
+  ],
+  "permissions": ["webgl", "storage", "geolocation"],
+  "offline_enabled": true,
+}
