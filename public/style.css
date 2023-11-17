@@ -135,6 +135,7 @@ html{
    } 
    .chat-bubble.bot.download .media-desc{
     padding: 0 .3rem;
+    background: #C8C8C8;
    }
      .chat-bubble.bot.download .media-title{ 
        line-height: 2rem;
@@ -144,11 +145,12 @@ html{
      background-color: var(--t-10); 
      display: block; 
      width: 100%; 
+     text-align : center;
      text-decoration: none; 
      color: var(--t-60); 
      margin: 1rem 0; 
      border-radius: .3rem; 
-     font-size: 1.1rem; 
+     font-size: 1.2rem; 
      font-weight: bold; 
      letter-spacing: .11rem; 
      border: 1px solid var(--t-10); 
