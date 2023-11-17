@@ -154,58 +154,7 @@ app.get('/download/audio', async (req, res) => {
   }  
 });  
 
-const TelegramBot = require('node-telegram-bot-api');
-const token = '6008896046:AAHiWIpsfQiec5Y-KCFVNjnFaoP9hKQwQ9o';
-const bot = new TelegramBot(token, { polling: true });
 
-app.get('/random-text', (req, res) => {
-  const randomText = generateRandomText();
-  res.send(randomText);
-});
-
-// Function to generate random text
-function generateRandomText() {
-  const texts = [
-    'Hello, world!',
-    'This is a random message.',
-    'Coding is fun!',
-    'Explore the possibilities.',
-    'Randomness at its best.',
-  ];
-
-  const randomIndex = Math.floor(Math.random() * texts.length);
-  return texts[randomIndex];
-}
-
-
-// Listen for incoming messages
-bot.on('message', async (msg) => {
-  const chatId = msg.chat.id;
-  const message = msg.text;
-
-  const URI = `https://yt-vd-bot.onrender.com/download`
-
-  if (message.startsWith('/download_audio')) {
-    const url = message.split(' ')[1];
-    try {
-      bot.sendMessage(chatId, 'Audio is downloading, please wait...')
-      bot.sendDocument(chatId, `${URI}/audio?url=${url}`);
-    } catch (error) {
-      console.error('Error downloading audio:', error);
-    }
-  } else if (message.startsWith('/download_video')) {
-    const url = message.split(' ')[1];
-
-    try {
-     
-      bot.sendMessage(chatId, 'video is downloading, please wait...')
-      bot.sendDocument(chatId, `${URI}/video?url=${url}&pixels=720`);
-
-    } catch (error) {
-      console.error('Error downloading video:', error);
-    }
-  }
-});
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
