@@ -186,7 +186,7 @@ function processUserRequest(userMessage){
 
     getMedia(youtubeURL,newMediaObj);
   } else {
-    const response = "I'm sorry, I couldn't understand your request. Please use commands like 'video <YouTube URL>' or 'audio <YouTube URL>'.";
+    const response = "I'm sorry, I couldn't understand your request. Please use commands like 'video <youtube_video_url>' or 'audio <youtube_video_url>'.";
     addBotResponse(response);
   } 
 }
