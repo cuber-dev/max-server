@@ -3,7 +3,7 @@
   "short_name" : "Maxpark",
   "description": "Youtube video and audio downloader bot ,also avalible on tg : @Maxpark09_bot ",
   "version": "4.0.0",
-  "start_url": "/",
+  "start_url": "https://yt-vd-bot.onrender.com/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#dd9716",
