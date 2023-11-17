@@ -114,7 +114,7 @@ html{
    } 
 
   .chat-bubble.bot.download {
-    background-color: #e4e4e0;
+    background-color: #E9E9E9;
     width: 95%;
     padding: .5rem;
     border-left: 4px solid var(--t-10);
@@ -131,6 +131,7 @@ html{
      max-width: 100%; 
      padding: 0; 
      margin-top: .8rem; 
+     word-break : break-all;
    } 
    .chat-bubble.bot.download .media-desc{
     padding: 0 .3rem;
@@ -139,10 +140,10 @@ html{
        line-height: 2rem;
      }
    .chat-bubble.bot.download .download-btn{ 
-     padding: .5rem .7rem; 
+     padding: 1rem 0; 
      background-color: var(--t-10); 
      display: block; 
-     width: max-content; 
+     width: 100%; 
      text-decoration: none; 
      color: var(--t-60); 
      margin: 1rem 0; 
