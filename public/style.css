@@ -134,7 +134,7 @@ html{
      word-break : break-word;
    } 
    .chat-bubble.bot.download .media-desc{
-    padding: 0 .3rem;
+    padding: .5rem;
     background:  #fff;
    }
      .chat-bubble.bot.download .media-title{ 
