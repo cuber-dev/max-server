@@ -165,7 +165,10 @@ html{
      -ms-transition: all 300ms ease; 
      -o-transition: all 300ms ease; 
  } 
- 
+ .chat-bubble.bot.download .download-btn i{ 
+    pointer-events: none;
+    margin-right : .45rem;
+ }
  .chat-bubble.bot.download .download-btn:active{ 
    transform: scale(1.1); 
    -webkit-transform: scale(1.1); 
