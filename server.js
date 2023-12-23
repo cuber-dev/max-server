@@ -107,7 +107,7 @@ app.get('/download/video', async (req, res) => {
 
     // If no format is found (desiredPixels is too low), use the lowest available format
     if (!formatToDownload) {
-      formatToDownload = formats[formats.length - 1];
+      formatToDownload = formats[0];
     }
 
     // Set response headers for the file download
