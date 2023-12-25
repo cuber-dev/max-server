@@ -101,7 +101,7 @@ function setForDownload(newMediaObj) {
   setDesc(desc,newMediaObj.desc)
 
   downloadBtn.href = newMediaObj.blobUrl;
-  downloadBtn.download = 'newMediaObj.fileName;
+  downloadBtn.download = newMediaObj.fileName;
   downloadBtn.innerHTML = `<i class="fa-solid fa-file-arrow-down"></i> Download ${newMediaObj.type} `;
   downloadBtn.classList.add('download-btn');
 
