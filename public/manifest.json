@@ -15,5 +15,5 @@
     }
   ],
   "permissions": ["webgl", "storage", "geolocation"],
-  "offline_enabled": true,
+  "offline_enabled": true
 }
