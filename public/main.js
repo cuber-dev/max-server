@@ -1,3 +1,17 @@
+/*
+  1. i used functions those who starts with "fetch",
+  for fetching data from server.
+  
+  2. i used functions those who starts with "set",
+  for setting data to DOM.
+  
+  3. i used functions those who starts with "get",
+  for getting data from deffrent functions to fetch of get
+  some data from my server or DOM.
+chatDisplay
+*/  
+
+
 const chatContainer = document.getElementById('chat-container');
 const chatDisplay = document.getElementById('chat-display');
 const userInput = document.getElementById('user-input');
@@ -21,12 +35,21 @@ const loader = bool => {
 
 async function fetchMediaFile(url) {
   const response = await fetch(url);
+  // console.log("Media-File response : ",response)
   return await response.blob();
 }
 
 async function fetchMediaInfo(url,type) {
   const response = await fetch(`/getVideoInfo?url=${encodeURIComponent(url)}&type=${type}`);
+  // console.log("Media-Info response : ",response)
   return await response.json()
+}
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }
 
 class Media{
@@ -35,6 +58,7 @@ class Media{
     this.name = '',
     this.desc = '',
     this.type = ''
+    this.id = generateUUID()
   }
 }
 
@@ -42,7 +66,7 @@ class Media{
 function setMediaDetails(newMediaObj,blob, mediaInfo) {
   newMediaObj.blobUrl = URL.createObjectURL(blob);
   newMediaObj.fileName = mediaInfo.generalInfo.fileName;
-  newMediaObj.desc = mediaInfo.videoDetails.description;
+  newMediaObj.desc = mediaInfo.videoDetails.description || 'This video does not contains description.';
   if(newMediaObj.blobUrl && newMediaObj.fileName) setForDownload(newMediaObj)
 }
 function getDownloadElements(type) {
@@ -110,7 +134,7 @@ function setForDownload(newMediaObj) {
   container.appendChild(title);
   container.appendChild(desc);
   container.appendChild(downloadBtn);
-  loader(false)
+  loader(false)  
   chatDisplay.appendChild(container);
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
 }
@@ -121,19 +145,32 @@ const getMedia = async (youtubeURL,newMediaObj) => {
   const pixels = 720
 
   try {
-    const mediaInfo = await fetchMediaInfo(url, newMediaObj.type);
-
+    const mediaInfo = await getMediaInfo(url,newMediaObj.type);
+    if(!mediaInfo) return;
+   
+    // console.log("Media-Info in json : ",mediaInfo)
     const downloadUrl = `/download/${newMediaObj.type}?url=${encodeURIComponent(url)}&pixels=${pixels}`;
     const blob = await fetchMediaFile(downloadUrl);
-    
-    setMediaDetails(newMediaObj,blob,mediaInfo);
-
+    // console.log("Media-File in blob : ",blob)
+    setMediaDetails(newMediaObj,blob,mediaInfo); 
   } catch (error) {
     console.error('Error:', error);
     alert('An error occurred while downloading the video.');
+    loader(false)
   }
-};
 
+};
+const getMediaInfo = async (url,type) => {
+  const mediaInfo = await fetchMediaInfo(url,type);
+  if(mediaInfo.error) {
+      addBotResponse(mediaInfo.error)
+      loader(false)
+      return false;
+  }  
+  const response = `Request received! You requested ${type} from YouTube video URL: ${anchor(url)} ,this will be ready in a couple of seconds...`;
+  addBotResponse(response,'innerHTML');
+  return mediaInfo;
+}
 
 function getBubble(){
   const div = document.createElement('div');
@@ -160,8 +197,8 @@ function addUserResponse(response) {
 function addCommands(){
   const commands = [
     'Available commands:',
-    'video <YouTube URL>',
-    'audio <YouTube URL>',
+    'video <YouTube video/short URL>',
+    'audio <YouTube video/short URL>',
     'clear (to clear messages except media files)',
   ];
   
@@ -170,24 +207,38 @@ function addCommands(){
   }
 }
 
+function validateURL(url) {
+  const urlMatch = url.startsWith('https://youtu.be/') || url.startsWith('https://www.youtube.com/');
+  console.log("url regex match: ", urlMatch,url);
+ 
+  if (!urlMatch) {
+    const response = `URL: ${url} is an invalid YouTube video/short URL. Please provide a valid YouTube video/short URL.`
+    addBotResponse(response);
+    loader(false)
+    return false;
+  }
+  return true;
+}
 
 function processUserRequest(userMessage){
+  loader(true)
   // Process user's request
   const commandRegex = /^(video|audio)\s+(https?:\/\/[^\s]+)/i;
   const match = userMessage.match(commandRegex);
+  console.log("command regex match : ",match)
+  
   if (match) {
+    if(!validateURL(match[2])) return;
+
     mediaObjects.push(new Media())
     const newMediaObj = mediaObjects[mediaObjects.length-1]
     newMediaObj.type = match[1].toLowerCase(); // 'video' or 'audio'
-    const youtubeURL = match[2]; // YouTube URL
-    const response = `Request received! You requested ${newMediaObj.type} from YouTube URL: ${anchor(youtubeURL)} ,this will be ready in a couple of seconds...`;
-    addBotResponse(response,'innerHTML');
-    loader(true)
-
+    const youtubeURL = match[2]; // YouTube video URL
     getMedia(youtubeURL,newMediaObj);
   } else {
     const response = "I'm sorry, I couldn't understand your request. Please use commands like 'video <youtube_video_url>' or 'audio <youtube_video_url>'.";
     addBotResponse(response);
+    loader(false)
   } 
 }
 

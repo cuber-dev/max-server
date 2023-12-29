@@ -4,11 +4,11 @@ const fs = require('fs')
 const userQueries = Array.from(require('./public/static/userQueries.json'))
 const app = express();
 const port = process.env.PORT || 3000;
-const cors = require('cors')
+const cors = require('cors') 
 
 
-app.use(cors({
-  origin: '*' 
+app.use(cors({ 
+  origin: '*'  
 }))   
 app.use(express.static('public'));
 
@@ -49,8 +49,12 @@ app.get('/getVideoInfo',storeUserQuery, async (req, res) => {
      const { url , type } = req.query;
     
     if (!ytdl.validateURL(url)) {
+      const response = `URL: ${url} is an invalid YouTube video/short URL. Please provide a valid YouTube video/short URL.`
+
       res.json({
-        error: 'Invalid YouTube URL'
+        status_code: '404',
+        message: 'Invalid YouTube URL',
+        error: response,
       });
       return;
     }

@@ -52,20 +52,29 @@ html{
 }
 }
 
-
-   .chat-container { 
-     max-width: 500px; 
-     margin: 1rem auto; 
-     margin-bottom: 0; 
-     border: 1px solid var(--t-30); 
-     border-radius: 5px; 
-   } 
+   .chat-container {
+     max-width: 500px;
+     margin: 1rem auto;
+     margin-bottom: 0;
+     border: 1px solid var(--t-30);
+     border-radius: 5px;
+     transition: 300ms ;
+     -webkit-transition: 300ms ;
+     -moz-transition: 300ms ;
+     -ms-transition: 300ms ;
+     -o-transition: 300ms ;
+} 
    .chat-container .chat-title{ 
      padding: .5rem; 
      background-color: var(--t-30); 
      font-size: 2.1rem;
      color: var(--t-60); 
    } 
+   .chat-container .chat-title .logo{
+    width: 24px;
+    height: 24px;
+
+   }
    .chat-display { 
      height: 450px; 
      overflow-y: scroll; 
@@ -116,7 +125,7 @@ html{
   .chat-bubble.bot.download {
     background-color: #E9E9E9;
     width: 95%;
-    padding: .5rem;
+    padding: 1rem .5rem;
     border-left: 4px solid var(--t-10);
     border-radius: .2rem;
     -webkit-border-radius: .2rem;
@@ -138,7 +147,7 @@ html{
     background:  #fff;
    }
      .chat-bubble.bot.download .media-title{ 
-       line-height: 2rem;
+       line-height: 1.8rem;
      }
    .chat-bubble.bot.download .download-btn{ 
      padding: 1rem 0; 
@@ -148,7 +157,7 @@ html{
      text-align : center;
      text-decoration: none; 
      color: var(--t-60); 
-     margin: 1rem 0; 
+     margin-top: 1rem;
      border-radius: .3rem; 
      font-size: 1.2rem; 
      font-weight: bold; 
@@ -167,7 +176,7 @@ html{
  } 
  .chat-bubble.bot.download .download-btn i{ 
     pointer-events: none;
-    margin-right : .45rem;
+    margin-right : .3rem;
  }
  .chat-bubble.bot.download .download-btn:active{ 
    transform: scale(1.1); 
