@@ -15,7 +15,7 @@ git clone https://github.com/cuber-dev/yt-vd-downloader
 npm install
 
 3. **Run the application:**
-node index.js
+node server.js
 
 4. **Access the application in your Ib browser:**
 http://localhost:3000
