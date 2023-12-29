@@ -1,7 +1,6 @@
 const express = require('express');
 const ytdl = require('ytdl-core');
 const fs = require('fs')
-const axios = require('axios')
 const userQueries = Array.from(require('./public/static/userQueries.json'))
 const app = express();
 const port = process.env.PORT || 3000;
