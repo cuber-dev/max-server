@@ -114,7 +114,7 @@ app.get('/download/video', async (req, res) => {
     }
 
     // Set response headers for the file download
-    res.header('Content-Disposition', `attachment; filename="${sanitizeFilename(info.videoDetails.title)}.${formatToDownload.container}"`);
+    res.header('Content-Disposition', `attachment; filename="${watermark}${sanitizeFilename(info.videoDetails.title)}.${formatToDownload.container}"`);
     res.header('Content-Type', formatToDownload.mimeType);
 
     // Pipe the video stream to the response
