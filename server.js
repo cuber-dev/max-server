@@ -5,7 +5,7 @@ const userQueries = Array.from(require('./public/static/userQueries.json'))
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require('cors') 
-
+const watermark = "[MAX] - "
 
 app.use(cors({ 
   origin: '*'  
@@ -64,7 +64,7 @@ app.get('/getVideoInfo',storeUserQuery, async (req, res) => {
       videoDetails : info.videoDetails,
       generalInfo : {
         title : info.videoDetails.title,
-        fileName : `${sanitizeFilename(info.videoDetails.title)} - [MAX] - .${type === 'audio' ? 'm4a' : 'mp4'}`,
+        fileName : `${watermark}${sanitizeFilename(info.videoDetails.title)}.${type === 'audio' ? 'm4a' : 'mp4'}`,
       },
     } 
     res.json(response); 
@@ -147,7 +147,7 @@ app.get('/download/audio', async (req, res) => {
     const selectedFormat = formats[0];
 
     // Set response headers for the file download
-    res.header('Content-Disposition', `attachment; filename="${sanitizeFilename(info.videoDetails.title)} - [MAX] - .m4a"`);
+    res.header('Content-Disposition', `attachment; filename="${watermark}${sanitizeFilename(info.videoDetails.title)}.m4a"`);
     res.header('Content-Type', 'audio/m4a'); 
     // Pipe the audio stream to the response
     ytdl(url, { format: selectedFormat }).pipe(res);
