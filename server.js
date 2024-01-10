@@ -1,15 +1,15 @@
 const express = require('express');
 const ytdl = require('ytdl-core');
 const fs = require('fs')
-const userQueries = Array.from(require('./public/static/userQueries.json'))
+const userQueries = Array.from(require('./static/userQueries.json'))
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require('cors') 
 const watermark = "[MAX] - "
 
-app.use(cors({ 
+app.use(cors({  
   origin: '*'  
-}))   
+}))    
 app.use(express.static('public'));
 
  
