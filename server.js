@@ -1,8 +1,9 @@
 const express = require('express');
 const ytdl = require('ytdl-core');
+const axios = require('axios');
 const fs = require('fs')
 const userQueries = Array.from(require('./static/userQueries.json'))
-const { getInfoRes } = require('./utils')
+const { getInfoRes, getFileName } = require('./utils')
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require('cors') 
@@ -15,19 +16,38 @@ app.get('/',(req,res) => {
 
 app.get('/video', async (req, res) => {
   const { url , quality} = req.query;
-  console.log("request : ",url)
+  console.log("request : ",url,quality)
   try {
-    const  info = await ytdl.getBasicInfo(url);
+    const info = await ytdl.getInfo(url);
     if(info){
-        const fileSize = parseInt(info.videoDetails.lengthSeconds) * parseInt(info.videoDetails.averageBitrate) / 8;
+      const formats = ytdl.filterFormats(info.formats, 'videoandaudio');
+      console.log(formats)
+      const choosenFormat = formats.find(format => format.qualityLabel === quality);
+      if(choosenFormat){ 
+        
+        // const headResponse = await axios.head(url);
+        // const contentLength = headResponse.headers['content-length'];
+        // console.log(contentLength)
+        // const fileSize = contentLength 
 
-        res.setHeader('Content-Disposition', 'attachment; filename="video.mp4"');
+        const duration = parseInt(choosenFormat.approxDurationMs) / 1000
+        const fileSize = (choosenFormat.bitrate / 8) * duration;
+        const file = {
+          format : choosenFormat,
+          name : info.videoDetails.title,
+          type : 'video', 
+          qualityLabel : choosenFormat.qualityLabel,
+          url : url,
+          size : choosenFormat.contentLength || fileSize,
+        } 
+        
+        res.setHeader('Content-Disposition', `attachment; filename="${getFileName(file.name,file.type)}"`);
         res.setHeader('Content-Type', 'video/mp4');
-        res.setHeader('Content-Length', fileSize);
-        console.log("file size : ",fileSize);
-      
-        ytdl(url, { height : quality }).pipe(res);
-        res.json(info);
+        res.setHeader('Content-Length', file.size);
+        console.log(file);
+        
+        ytdl(file.url, { format : file.format  }).pipe(res);
+      }else res.status(404).send('Video can not be downloadable with ',quality,'quality.');
     }
   } catch (err) {
     console.error(err);

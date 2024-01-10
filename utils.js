@@ -51,5 +51,6 @@ const getInfoRes = (info,type) => {
 }
 
 module.exports = {
-    getInfoRes
+    getInfoRes,
+    getFileName
 }
