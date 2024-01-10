@@ -1,8 +1,8 @@
 {
-  "name": "YT-Video/Audio-Downloader-Bot",
-  "short_name" : "Maxpark",
-  "description": "Youtube video and audio downloader bot ,also avalible on tg : @Maxpark09_bot ",
-  "version": "4.0.0",
+  "name": "YT-DOWNLOAD",
+  "short_name" : "YT-DOWNLOAD",
+  "description": "A simple Youtube video and audio downloader.",
+  "version": "1.0.0",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
