@@ -1,12 +1,12 @@
 const ytdl = require('ytdl-core');
 const baseUrl = 'http://localhost:3000'
 const watermark = "[MAX] - "
+
 const getFileName = (filename,type) => `${watermark}${sanitizeFilename(filename)}.${type === 'audio' ? 'm4a' : 'mp4'}`
 const getBaseLinks = (type,url,file) => {
     return type === 'video' ?  `${baseUrl}/video?url=${url}&quality=${file.quality}` : 
                                `${baseUrl}/audio?url=${url}&size=${file.size}`; 
 }  
-
 function getSizeLabel(size) {
     if(!size) return 'unknown';
 
@@ -50,6 +50,7 @@ function sanitizeFilename(filename) {
 //       console.log("Total requests : ",userQueries.length)
 //       next();
 //   }
+
 function generateUUID() {
   return 'xx3x-xyxx'.replace(/[xy]/g, function(c) {
     var r = Math.random() * 16 | 0,
