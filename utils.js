@@ -3,8 +3,8 @@ const baseUrl = 'http://localhost:3000'
 const watermark = "[MAX] - "
 const getFileName = (filename,type) => `${watermark}${sanitizeFilename(filename)}.${type === 'audio' ? 'm4a' : 'mp4'}`
 const getBaseLinks = (type,url,file) => {
-    return type === 'audio' ? `${baseUrl}/audio?url=${url}&size=${file.size}` 
-        : `${baseUrl}/video?url=${url}&quality=${file.quality}`
+    return type === 'video' ?  `${baseUrl}/video?url=${url}&quality=${file.quality}` : 
+                               `${baseUrl}/audio?url=${url}&size=${file.size}`; 
 }  
 
 function getSizeLabel(size) {
@@ -12,14 +12,14 @@ function getSizeLabel(size) {
 
     if (size < 1024) {
         return `${size} bytes`;
-      } else if (size < 1048576) {
+      } else if (size < 1024 * 1024) {
         return `${(size / 1024).toFixed(2)} KB`;
-      } else if (size < 1073741824) {
-        return `${(size / 1048576).toFixed(2)} MB`;
+      } else if (size < 1024 * 1024 * 1024) {
+        return `${(size / (1024 * 1024)).toFixed(2)} MB`;
       } else {
-        return `${(size / 1073741824).toFixed(2)} GB`;
+        return `${(size / 1024 * 1024 * 1024).toFixed(2)} GB`;
       }
-  }
+  } 
 
 function sanitizeFilename(filename) {
     return filename
@@ -51,30 +51,31 @@ function sanitizeFilename(filename) {
 //       next();
 //   }
 
+class Media{
+    constructor(format,i,url){
+        this.i = i
+        this.sizeLabel = getSizeLabel(format.contentLength);
+        if(format.qualityLabel){
+          this.qualityLabel = format.qualityLabel
+          this.link = getBaseLinks('video',url,{ quality : this.qualityLabel});
+        }else this.link = getBaseLinks('audio',url,{ size : format.contentLength});
+    }
+} 
+
 const getInfoRes = (url,info) => {
     let videoFormats = ytdl.filterFormats(info.formats, 'audioandvideo');
     let audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
-    console.log('video : ',videoFormats)
-    console.log('audio : ',audioFormats)
-    const videoLinks = videoFormats.map((format,i) => ({
-        id : i,
-        link : getBaseLinks('video',url,{ quality : format.qualityLabel}),
-        size : format.contentLength,
-        sizeLabel : getSizeLabel(format.contentLength),
-        qualityLabel : format.qualityLabel
-    }))
-    const audioLinks = audioFormats.map((format,i) => ({
-        id : i,
-        link : getBaseLinks('audio',url,{ size : format.contentLength}),
-        size : format.contentLength,
-        sizeLabel : getSizeLabel(format.contentLength),
-    })) 
+   
+    const videoLinks = videoFormats.map((format,i) => (new Media(format,i,url)));
+    const audioLinks = audioFormats.map((format,i) => (new Media(format,i,url)));
+
     const response = {
         title : info.videoDetails.title,
         thumbnail : info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
-        audioLinks,
         videoLinks,
+        audioLinks,
       } 
+    console.log(response);
     return response;
 }
 

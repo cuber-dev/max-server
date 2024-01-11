@@ -19,7 +19,6 @@ app.get('/video', async (req, res) => {
     const info = await ytdl.getInfo(url);
     if(info){
       const formats = ytdl.filterFormats(info.formats, 'videoandaudio');
-      console.log(formats)
       const choosenFormat = formats.find(format => format.qualityLabel === quality);
       if(choosenFormat){ 
         
@@ -54,7 +53,6 @@ app.get('/audio', async (req, res) => {
     const info = await ytdl.getInfo(url);
     if(info){
       const formats = ytdl.filterFormats(info.formats, 'audioonly');
-      console.log(formats);
       const choosenFormat = formats.find(format => format.contentLength === size);
       if(choosenFormat){ 
         const file = {
@@ -103,5 +101,5 @@ app.get('/info',async (req, res) => {
 }); 
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}, url : http://localhost:${port}/`);
 });
