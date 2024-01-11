@@ -50,10 +50,16 @@ function sanitizeFilename(filename) {
 //       console.log("Total requests : ",userQueries.length)
 //       next();
 //   }
-
+function generateUUID() {
+  return 'xx3x-xyxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16).replace('|+|','');
+  });
+}
 class Media{
-    constructor(format,i,url){
-        this.i = i
+    constructor(format,url){ 
+        this.id = `${url}|+|${generateUUID()}`;
         this.sizeLabel = getSizeLabel(format.contentLength);
         if(format.qualityLabel){
           this.qualityLabel = format.qualityLabel
@@ -63,17 +69,18 @@ class Media{
 } 
 
 const getInfoRes = (url,info) => {
-    let videoFormats = ytdl.filterFormats(info.formats, 'audioandvideo');
-    let audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
+    const videoFormats = ytdl.filterFormats(info.formats, 'audioandvideo');
+    const audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
    
-    const videoLinks = videoFormats.map((format,i) => (new Media(format,i,url)));
-    const audioLinks = audioFormats.map((format,i) => (new Media(format,i,url)));
+    const videoLinks = videoFormats.map((format,i) => (new Media(format,url)));
+    const audioLinks = audioFormats.map((format,i) => (new Media(format,url)));
 
     const response = {
         title : info.videoDetails.title,
         thumbnail : info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
         videoLinks,
         audioLinks,
+        originalUrl : url,
       } 
     console.log(response);
     return response;
