@@ -1,3 +1,4 @@
+require('dotenv').config() 
 const express = require('express');
 const ytdl = require('ytdl-core');
 const fs = require('fs')
@@ -7,7 +8,6 @@ const port = process.env.PORT || 3000;
 const cors = require('cors') 
 
 app.use(cors({ origin : '*' }))    
-
 app.get('/',(req,res) => {
   res.json({ msg : 'OK' })
 })  
@@ -109,5 +109,10 @@ app.get('/info',async (req, res) => {
 }); 
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}, url : http://localhost:${port}/`);
+  console.log(`
+    Server running on port ${port}, 
+    public : ${baseUrl} , 
+    local : http://localhost:${port}/`
+  );
 });
+  
