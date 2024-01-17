@@ -20,7 +20,20 @@ function getSizeLabel(size) {
         return `${(size / 1024 * 1024 * 1024).toFixed(2)} GB`;
       }
   } 
+  function convertDuration(milliseconds) {
+    // Convert milliseconds to seconds
+    var seconds = Math.floor(milliseconds / 1000);
 
+    // Calculate hours, minutes, and remaining seconds
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var remainingSeconds = seconds % 60;
+
+    // Format the result
+    var formattedDuration = hours + ":" + minutes + ":" + remainingSeconds;
+
+    return formattedDuration.replace('0:','');
+}
 function sanitizeFilename(filename) {
     return filename
         .replace(/[^\w\s.-]/g, '_')  // Replace special characters with underscores
@@ -60,12 +73,18 @@ function generateUUID() {
 }
 class Media{
     constructor(format,url){ 
-        this.id = `${url}|+|${generateUUID()}`;
-        this.sizeLabel = getSizeLabel(format.contentLength);
         if(format.qualityLabel){
+          this.label = 'Video'
           this.qualityLabel = format.qualityLabel
           this.link = getBaseLinks('video',url,{ quality : this.qualityLabel});
-        }else this.link = getBaseLinks('audio',url,{ size : format.contentLength});
+          this.ext = '.mp4'
+        }else {
+          this.label = 'Audio'
+          this.link = getBaseLinks('audio',url,{ size : format.contentLength});
+          this.ext = '.m4a'
+        }
+        this.id = `${url}|+|${generateUUID()}`;
+        this.sizeLabel = getSizeLabel(format.contentLength);
     }
 } 
 
@@ -79,6 +98,8 @@ const getInfoRes = (url,info) => {
     const response = {
         title : info.videoDetails.title,
         thumbnail : info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
+        duration : convertDuration(videoFormats[0].approxDurationMs),
+        time : new Date().toLocaleString(),
         videoLinks,
         audioLinks,
         originalUrl : url,
