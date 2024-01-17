@@ -1,5 +1,5 @@
 const ytdl = require('ytdl-core');
-const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
+const baseUrl = 'https://a6864657-ac0b-4b3c-b208-31b1bf8eead8-00-3cry9l8we6yhg.pike.replit.dev' || 'http://localhost:3000'
 const watermark = "[MAX] - "
 
 const getFileName = (filename,type) => `${watermark}${sanitizeFilename(filename)}.${type === 'audio' ? 'm4a' : 'mp4'}`
