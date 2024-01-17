@@ -88,13 +88,13 @@ app.get('/audio', async (req, res) => {
 app.get('/info',async (req, res) => {
   try {
      const { url } = req.query;
-    
+    console.log("info request : ",url);
     if (!ytdl.validateURL(url)) {
       const response = `URL: ${url} is an invalid YouTube video/short URL. Please provide a valid YouTube video/short URL.`
 
       res.json({
         status_code: '404',
-        message: 'Invalid YouTube URL',
+        message: 'Invalid YouTube URL, cant even get the info!',
         error: response,
       });
       return;

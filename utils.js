@@ -1,5 +1,5 @@
 const ytdl = require('ytdl-core');
-const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
+const baseUrl = process.env.BASE_URLs || 'http://localhost:3000'
 const watermark = "[MAX] - "
 
 const getFileName = (filename,type) => `${watermark}${sanitizeFilename(filename)}.${type === 'audio' ? 'm4a' : 'mp4'}`
@@ -30,9 +30,9 @@ function getSizeLabel(size) {
     var remainingSeconds = seconds % 60;
 
     // Format the result
-    var formattedDuration = hours + ":" + minutes + ":" + remainingSeconds;
+    var formattedDuration = `${hours !== 0 ? hours + ':': ''}${minutes !== 0 ? minutes : '00'}:${remainingSeconds}`;
 
-    return formattedDuration.replace('0:','');
+    return formattedDuration;
 }
 function sanitizeFilename(filename) {
     return filename
@@ -99,12 +99,10 @@ const getInfoRes = (url,info) => {
         title : info.videoDetails.title,
         thumbnail : info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
         duration : convertDuration(videoFormats[0].approxDurationMs),
-        time : new Date().toLocaleString(),
         videoLinks,
         audioLinks,
         originalUrl : url,
       } 
-    console.log('response : ',response);
     return response;
 }
 
