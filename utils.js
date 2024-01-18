@@ -1,5 +1,5 @@
 const ytdl = require('ytdl-core');
-const baseUrl = 'https://a6864657-ac0b-4b3c-b208-31b1bf8eead8-00-3cry9l8we6yhg.pike.replit.dev' || 'http://localhost:3000'
+const baseUrl = 'https://max-server.onrender.com' || 'http://localhost:3000'
 const watermark = "[MAX] - "
 
 const getFileName = (filename,type) => `${watermark}${sanitizeFilename(filename)}.${type === 'audio' ? 'm4a' : 'mp4'}`
@@ -17,9 +17,9 @@ function getSizeLabel(size) {
       } else if (size < 1024 * 1024 * 1024) {
         return `${(size / (1024 * 1024)).toFixed(2)} MB`;
       } else {
-        return `${(size / 1024 * 1024 * 1024).toFixed(2)} GB`;
+        return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
       }
-  } 
+  }  
   function convertDuration(milliseconds) {
     // Convert milliseconds to seconds
     var seconds = Math.floor(milliseconds / 1000);
@@ -28,9 +28,18 @@ function getSizeLabel(size) {
     var hours = Math.floor(seconds / 3600);
     var minutes = Math.floor((seconds % 3600) / 60);
     var remainingSeconds = seconds % 60;
+    // adding zero's
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    remainingSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
 
-    // Format the result
-    var formattedDuration = `${hours !== 0 ? hours + ':': ''}${minutes !== 0 ? minutes : '00'}:${remainingSeconds}`;
+    // Formatting the result
+    hours = hours == 0 ? '' : hours + ':';
+    minutes = minutes == 0 ? '00' : minutes;
+    remainingSeconds = remainingSeconds == 0 ? '00' : remainingSeconds;
+
+    // Concatting the duration.
+    var formattedDuration = `${hours}${minutes}:${remainingSeconds}`;
 
     return formattedDuration;
 }
